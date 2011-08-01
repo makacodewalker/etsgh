@@ -20,8 +20,12 @@
 <div align="center">
 
 {% if logged_in %}
+<form method='post' action="" data-ajax="false">
+{{ payForm.as_p }}
+<input type='submit' name='Submit' value="Save Account">
+</form>
 <form  method="post" data-ajax="false">
-{{ form.as_p }}
+{{ eventForm.as_p }}
 <div data-role="fieldcontain">
 <input name="addevent" type="hidden" value="addevent" />
 <p>Event name: <input name="name" type="text" value="" /></p>

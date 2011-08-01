@@ -21,25 +21,21 @@
     {% if form.username.errors %}
       {{ form.username.html_error_list }}
     {% endif %}
-   <p><label for="id_username">Username:</label> {{ form.username }}</p>
+   <p><label for="id_username">Enter username:</label> {{ form.username }}</p>
 
     {% if form.password1.errors %}
       {{ form.password1.html_error_list }}
     {% endif %}
-     <p><label for="id_password1">Password: {{ form.password1 }} </p>
+     <p><label for="id_password1">Enter password:</label> {{ form.password1 }} </p>
 
     {% if form.password2.errors %}
       {{ form.password2.html_error_list }}
     {% endif %}
-    <p> <label for="id_password2">Password: {{ form.password2 }} (*retype password)</p>
+    <p> <label for="id_password2">Password again:</label> {{ form.password2 }} </p>
 
-    <p> <input type="submit" value="Create the account" /> </p>
+    <p> <input type="submit" value="Sign Up" /> </p>
   </label>
 </li>
 </ul>
-<div>
-<div>
-</div> 
-</div> 
 </div> 
 {% endblock %}

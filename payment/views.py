@@ -26,7 +26,7 @@ class OutgoingSMSForm(ModelForm):
         exclude = ['receiver','message','sent','created']
         
 def redeemCart(request, phoneNumber, transID='blank'): # Get cart thats unpaid for
-    cartRecords = Cart.objects.filter(consumerPhone = phoneNumber)
+    cartRecords = Cart.objects.filter(cPhone = phoneNumber)
     cart2redeem = cartRecords.objects.get(paid = False)
     if transID != 'blank' and IncomingSMS.objects.get(transactionID = transID):
         cart2redeem.paid = True

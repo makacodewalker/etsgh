@@ -18,11 +18,11 @@
 
 {% if logged_in %}
 <form  method="post" data-ajax="false">
-{{ form.as_p }}
+{{ eventForm.as_p }}
 <div data-role="fieldcontain">
 <p><li>{{event}}</li></p>
 <p><input name="name" type="hidden" value="{{event}}" /></p>
-<p>Ticket type: <input name="ttype" type="text" value="" /></p>
+<p>Ticket Type: <input name="ttype" type="text" value="" /></p>
 <p>Ticket Price: <input name="price" type="text" value="" /></p>
 <p>Quantity: <input name="qty" type="text" value="" /></p>
 </div>

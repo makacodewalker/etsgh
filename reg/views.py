@@ -15,6 +15,9 @@ from django.core.urlresolvers import reverse
 #class ProfileForm(ModelForm):
 #    class Meta:
 #        model = UserProfile
+
+def home(request):
+    pass
     
 @csrf_exempt
 def signupView(request):

@@ -1,46 +1,38 @@
+# Create your models here.
+
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User	# necessary for the user profile to work
 
+PAYMENT_CHOICES = (
+    ('Mobile Money', (
+            ('mtn', 'MTN Mobile Money'),
+            ('tig', 'Tigo Cash'),
+            ('air', 'Airtel Money'),
+        )
+    ),
+    ('iwall', 'i-Wallet'),
+    ('inch', 'In-Charge'),
+    ('Bank', (
+            ('stch', 'Standard Chartered'),
+            ('eco', 'Ecobank'),
+        )
+    ),
+    ('ezw', 'Ezwich'),
+)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User)        # This field is required.
-    phone=models.CharField(max_length=12)
-    isOrganizingEvent = models.BooleanField()
-    if isOrganizingEvent:
-        natID = models.CharField(max_length=15, blank=True)
-        phone2=models.CharField(max_length=12,null=True)
-
-
-#class Consumer(models.Model):
-#    first_name= models.CharField(max_length=30,blank=True)
-#    other_name= models.CharField(max_length=30,blank=True)    
-#    email=models.EmailField(blank=True)
-#    phone=models.CharField(max_length=12) 
-#    created=models.DateTimeField(auto_now_add=True)
-#    def __unicode__(self):
-#        return self.phone 
-#    
-#class ConsumerAdmin(admin.ModelAdmin):
-#    list_display = ('first_name','other_name','phone','email','created')
-#    search_fields = ('first_name','other_name')
-#    list_filter = ('created',)
-#
-#    
-#class EventOrganizer(models.Model):
-#    name= models.CharField(max_length=60)
-#    natID = models.CharField(max_length=15)
-#    phone1=models.CharField(max_length=12)
-#    phone2=models.CharField(max_length=12,null=True)
-#    email=models.EmailField(null=True)
-#    created=models.DateTimeField(auto_now_add=True)
-#    def __unicode__(self):
-#        return self.name  
-#    
-#class EventOrganizerAdmin(admin.ModelAdmin):
-#    list_display = ('name','phone1','email','created','natID')
-#    search_fields = ('name',)
-#    list_filter = ('created',)
-#    #inlines = [EventInLine]
+    mobileNo =models.CharField(max_length=14)
+    payInMethod = models.CharField(max_length=5, choices=PAYMENT_CHOICES, blank=True)
+    payInAcctNo = models.CharField(max_length=25, blank=True)
+    def __unicode__(self):
+        return self.user
+'''
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user','phone','natID')
+    search_fields = ('user',)
+'''
 
 class EventCategory(models.Model):
     name = models.CharField(max_length=30)
@@ -54,6 +46,7 @@ class EventCategoryAdmin(admin.ModelAdmin):
     list_filter = ('created',)
     #inlines = [EventInLine]
 '''
+
 class Event(models.Model):
     name = models.CharField(max_length=30)
     category = models.ForeignKey(EventCategory)
@@ -76,10 +69,10 @@ class EventAdmin(admin.ModelAdmin):
 
 class Cart(models.Model):
     transactionID =  models.CharField(max_length=20,blank=True)
-    cPhone=models.CharField(max_length=20) 
+    cPhone=models.CharField(max_length=14) 
     value=models.DecimalField(max_digits=10,decimal_places=2)
-    paymentType =  models.CharField(max_length=20,blank=True)
-    operator =  models.CharField(max_length=20,blank=True)
+    paymentType =  models.CharField(max_length=5, choices=PAYMENT_CHOICES)
+    #operator =  models.CharField(max_length=20,blank=True)
     created=models.DateTimeField(auto_now_add=True)
     paid =  models.BooleanField()
     def __unicode__(self):
@@ -91,6 +84,7 @@ class CartAdmin(admin.ModelAdmin):
     list_filter = ('created','paid')
     #inlines = [TicketInLine]
 '''
+
 class TicketType(models.Model): 
     name =  models.CharField(max_length=30)
     price =  models.DecimalField(max_digits=10,decimal_places=2)   
@@ -103,6 +97,7 @@ class TicketTypeAdmin(admin.ModelAdmin):
     list_display = ('name','price','event')
     search_fields = ('name','event')
 '''
+
 class Ticket(models.Model):
     cart=models.CharField(max_length=30,blank=True)
     event=models.ForeignKey(Event) 
@@ -114,13 +109,12 @@ class Ticket(models.Model):
     #order =  models.CharField(max_length=30)
     def __unicode__(self):
         return self.serialNo
-
-
 '''
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('pin','serialNo','ticketType','cart','paid')
     search_fields = ('ticketType','event')
 '''     
+
 class Suggestion(models.Model):
     name =  models.CharField(max_length=30,blank=True)
     suggestion =  models.TextField(max_length=30)
@@ -135,7 +129,7 @@ class SuggestionAdmin(admin.ModelAdmin):
 
 class OutgoingSMS(models.Model):
     #receiver=models.ForeignKey(Consumer)
-    receiver=models.CharField(max_length=15)
+    receiver=models.CharField(max_length=14)
     message=models.CharField(max_length=160)
     sent=models.BooleanField()	#chn from status >>> sent   
     created=models.DateTimeField(auto_now_add=True)
@@ -149,7 +143,7 @@ class OutgoingSMSAdmin(admin.ModelAdmin):
 '''
     
 class IncomingSMS(models.Model):
-    sender=models.CharField(max_length=15)
+    sender=models.CharField(max_length=14)
     message=models.CharField(max_length=160)       
     created=models.DateTimeField(auto_now_add=True)
     read=models.BooleanField()
@@ -164,8 +158,7 @@ class IncomingSMSAdmin(admin.ModelAdmin):
     list_filter = ('created',)
 '''
 
-#admin.site.register(Consumer,ConsumerAdmin)
-#admin.site.register(EventOrganizer,EventOrganizerAdmin)
+admin.site.register(UserProfile)
 admin.site.register(EventCategory)
 admin.site.register(Event)
 admin.site.register(Ticket)
@@ -175,4 +168,15 @@ admin.site.register(Suggestion)
 admin.site.register(OutgoingSMS)
 admin.site.register(IncomingSMS)
 
-# Create your models here.
+
+#admin.site.register(Consumer,ConsumerAdmin)
+#admin.site.register(EventOrganizer,EventOrganizerAdmin)
+#admin.site.register(UserProfile,UserProfileAdmin)
+#admin.site.register(EventCategory,EventCategoryAdmin)
+#admin.site.register(Event,EventAdmin)
+#admin.site.register(Ticket,TicketAdmin)
+#admin.site.register(TicketType,TicketTypeAdmin)
+#admin.site.register(Cart,CartAdmin)
+#admin.site.register(Suggestion,SuggestionAdmin)
+#admin.site.register(OutgoingSMS,OutgoingSMSAdmin)
+#admin.site.register(IncomingSMS,IncomingSMSAdmin)

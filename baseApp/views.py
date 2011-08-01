@@ -19,14 +19,29 @@ from django.forms.extras.widgets import *
 class AddForm(forms.Form):
     pass
     
+class CartForm(ModelForm):
+    class Meta:
+        model =Cart
 
+class TicketForm(ModelForm):
+    class Meta:
+        model =Ticket 
+
+class PayInForm(ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = ['user']
+           
+class AddEventForm(forms.Form):
+    pass
+        
 def home(request):
     t = loader.get_template('baseApp/welcome.html')
     c = Context(dict())
     return HttpResponse(t.render(c))
     
 def categories_list(request):
-#    return HttpResponse('am here')
+    #return HttpResponse('am here')
     category_list = EventCategory.objects.all()
     return render_to_response('baseApp/categoryView.html', {'category_list':category_list})
 
@@ -42,25 +57,11 @@ def categories_list(request):
 #    class Meta:
 #        model=Event
 #        exclude=['post','author']
+
 def view_map(request,id):
     event = Event.objects.get(id=id)
     ticketsType=TicketType.objects.filter(event__id=id)
     return render_to_response('baseApp/map.html', {'event_details':event})
-
-class TicketForm(ModelForm):
-    class Meta:
-        model =Ticket
-        #exclude=['author','post']  
-
-class CartForm(ModelForm):
-    class Meta:
-        model =Cart
-           
-class AddEventForm(forms.Form):
-    pass
-    
-class CartForm(forms.Form):
-    pass
 
 def cart_list(request,id):
     if id:        
@@ -74,14 +75,13 @@ def events_list(request,id):
     return render_to_response('baseApp/eventList.html', {'events':event_list})
 
 def isPhone(inp):
-     result = re.search(r'^[0][2|3|5][4|3|6|7|8]([1-9]){7}$', inp,re.L)
+    result = re.search(r'^[0][2|5][0|4|3|6|7|8]([0-9]){7}$', inp,re.L)
     # print result.groups() 
-     if result:
-         return True
-     else:
-         return False
+    if result:
+        return True
+    else:
+        return False
      
-
 @csrf_exempt
 def event_detail(request,id):
     event = Event.objects.get(id=id)
@@ -110,7 +110,7 @@ def event_detail(request,id):
                  msg="Please select a ticket"
                  return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg})                 
                    
-            try:#Check the for the availability of tickets
+            try:#Check for the availability of tickets
                 
                 for j in range(len(tstr)):
                     tyt=TicketType.objects.get(name=tstr[j])
@@ -125,7 +125,7 @@ def event_detail(request,id):
             try:#checks the availability of cart thus if it already exists
                 carte=Cart.objects.filter(cPhone=request.POST['phone'],paid=False)
                 
-                 #if a cart is not available for the user(phone number) creates a cart 
+                #if a cart is not available for the user(phone number) creates a cart 
                 avail=len(carte)
                 if avail==0:
                     c=Cart(cPhone=request.POST['phone'],value=str(sum),created=tdate)
@@ -189,44 +189,47 @@ def event_detail(request,id):
         return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets})
     
 @csrf_exempt
-def addEvent_view(request): 
-    categories = EventCategory.objects.all() 
-   # return HttpResponse(str(datetime.datetime.today()))     
-    if request.method == 'POST':  
-        
+def addEvent_view(request):
+    categories = EventCategory.objects.all()
+    if request.method == 'POST':
+        try:
+            userInfo = UserProfile.objects.get(user=request.user)
+            payForm = PayInForm(request.POST, instance=userInfo)    # A Payment Details form linked to Organizer
+        except:
+            userInfo = None
+            payForm = PayInForm(request.POST)
+            
         if request.POST.get('addevent', None):
             categories = EventCategory.objects.get(name=request.POST['category'])
             #checks if fields are not empty
             if request.POST.get('name', None) or request.POST.get('venue', None) or request.POST.get('date', None):
-                form = AddEventForm(request.POST)
-                try: 
+                eventForm = AddEventForm(request.POST)
+                try:
                     event=Event.objects.get(name=request.POST['name'])
-                    categories = EventCategory.objects.all() 
-                    form = AddEventForm()
+                    categories = EventCategory.objects.all()
+                    eventForm = AddEventForm()
                     msg="an event with this name already exists"
-                    return render_to_response('baseApp/addEvent.html', {'form':form.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories,'msg':msg})
-    
+                    return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories,'msg':msg})
                 except:#creates an event
                     e=Event(name=request.POST['name'],category=categories,venue=request.POST['venue'],
                     locationX=request.POST['gpsx'],locationY=request.POST['gpsy'],
                     event_date=request.POST['date'],event_Rep=request.user,created=str(datetime.datetime.today()))
                     e.save()
                     event=request.POST['name']
-                    return render_to_response('baseApp/ticket.html', {'form':form.as_p(),'logged_in':request.user.is_authenticated(),'event':e,'isaddevent':True})
-                        
+                    return render_to_response('baseApp/ticket.html', {'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'event':e,'isaddevent':True})
+
             else:
                 categories = EventCategory.objects.all() 
-                form = AddEventForm()
-                msg="Please fill empty fields to contineu"
-                return render_to_response('baseApp/addEvent.html', {'form':form.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories,'msg':msg})
+                eventForm = AddEventForm()
+                msg="Please fill empty fields to continue"
+                return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories,'msg':msg})
 
-                
         else:#creates an event type        
             event=Event.objects.get(name=str(request.POST['name']))
             tt=TicketType(name=request.POST['ttype'],price=request.POST['price'],event=event)    
             tt.save()
             
-             #generate tickets
+            #generate tickets
             for i in range(int(request.POST['qty'])):
                 pin=int(random.random()*10000000000000)
                 s=int(random.random()*100000000)
@@ -234,41 +237,47 @@ def addEvent_view(request):
                 t=Ticket(event=event,ticketType=tt,pin=pin,serialNo=sn)
                 t.save()
                 
-            msg=str(request.POST['qty'])+' '+str(request.POST['ttype'])+" tickets has been generated for "+str(request.POST['name'])
-            form = AddEventForm()
-            return render_to_response('baseApp/ticket.html', {'form':form.as_p(),'logged_in':request.user.is_authenticated(),'event':event,'isaddevent':True,'msg':msg})
-              
+            msg=str(request.POST['qty'])+' '+str(request.POST['ttype'])+" tickets have been generated for "+str(request.POST['name'])
+            eventForm = AddEventForm()
+            return render_to_response('baseApp/ticket.html', {'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'event':event,'isaddevent':True,'msg':msg})
+          
     else:
-        form = AddEventForm() 
-        return render_to_response('baseApp/addEvent.html', {'form':form.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories})
+        try:
+            userInfo = UserProfile.objects.get(user=request.user)
+            payForm = PayInForm(instance=userInfo)
+        except:
+            userInfo = None
+            payForm = PayInForm()
+        eventForm = AddEventForm()
+        return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories})
 
         
 class SuggestionForm(ModelForm):
-	class Meta:
-		model=Suggestion
-		exclude = ['created',]
+    class Meta:
+        model=Suggestion
+        exclude = ['created',]
 
 @csrf_exempt
 def addSuggestion(request):
-	suggestions = Suggestion.objects.all()
-	msg=''
-	#Start of form code
-	comment = Suggestion()
-	if request.method == 'POST':
-		if request.user.is_authenticated():
-			comment = Suggestion(name=request.user.username)
-		else:
-			comment = Suggestion()
-		
-		form = SuggestionForm(request.POST, instance = comment)
-		if form.is_valid():
-			form.save()
-			msg = 'Your suggestion has been saved'
-			return render_to_response('baseApp/suggestions.html', {'suggestions':suggestions,'msg':msg,'form':form.as_p() })
-	else:
-		form = SuggestionForm()
-		#end of form code
-		return render_to_response('baseApp/suggestions.html', {'suggestions':suggestions,'msg':msg,'form':form.as_p() })
+    suggestions = Suggestion.objects.all()
+    msg=''
+    #Start of form code
+    comment = Suggestion()
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            comment = Suggestion(name=request.user.username)
+        else:
+            comment = Suggestion()
+
+        form = SuggestionForm(request.POST, instance = comment)
+        if form.is_valid():
+            form.save()
+            msg = 'Your suggestion has been saved'
+            return render_to_response('baseApp/suggestions.html', {'suggestions':suggestions,'msg':msg,'form':form.as_p() })
+    else:
+        form = SuggestionForm()
+        #end of form code
+        return render_to_response('baseApp/suggestions.html', {'suggestions':suggestions,'msg':msg,'form':form.as_p() })
 
 #@csrf_exempt
 #def editSuggestion(request, id):
