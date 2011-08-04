@@ -17,7 +17,9 @@ from django.core.urlresolvers import reverse
 #        model = UserProfile
 
 def home(request):
-    pass
+    t = loader.get_template('reg/base.html')
+    c = Context(dict())
+    return HttpResponse(t.render(c))
     
 @csrf_exempt
 def signupView(request):

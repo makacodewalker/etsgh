@@ -1,15 +1,12 @@
-{% extends 'baseApp/index.html' %}
+{% extends 'base.html' %}
+{% block title %}Synapis Mobile{% endblock %}
+
 {% block content %}
 
 <div  data-role="page" data-theme="Swatch D"> 
 		<div align="center" data-role="header" data-theme="b">
 		<p>Welcome to ETS</p>		
 		</div> 
-		<div data-role="header" data-position="inline" data-theme="b">
-			<a href='reg/signup' rel="external", data-ajax="false">Signup</a>
-			<h1></h1> 
-			<a href='reg/login' rel="external", data-ajax="false">Login/Logout</a>
-			</div>
 		<div align="center" data-role="content">
 		
 		<ul data-role="listview" data-theme="c">
@@ -19,7 +16,7 @@
 		</ul>  
 
 		<div align="left" data-role="content">
-			<p><h4>Popular Events</h4></p>
+			<p><h4>Most Liked</h4></p>
 			<div data-role="header" data-position="inline" data-theme="g">
 				<img src="/static/images/1.jpg" height="225" >
 				<img src="/static/images/2.jpg" height="225" >
