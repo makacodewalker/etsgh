@@ -23,6 +23,12 @@ class CartForm(ModelForm):
     class Meta:
         model =Cart
 
+
+class TicketTypeForm(ModelForm):
+    class Meta:
+        model =TicketType
+        exclude = ['cart'] 
+
 class TicketForm(ModelForm):
     class Meta:
         model =Ticket 
@@ -32,18 +38,40 @@ class PayInForm(ModelForm):
         model = UserProfile
         exclude = ['user']
            
-class AddEventForm(forms.Form):
-    pass
+#class AddEventForm(forms.Form):
+#    pass
+
+class AddEventForm(ModelForm):
+    class Meta:
+        model=Event
+        exclude=['created','event_Rep']
         
+class SuggestionForm(ModelForm):
+    class Meta:
+        model=Suggestion
+        exclude = ['created',]
+
+# Used to process Categories
+CATEGORY_DICT = {}
+for cat in CATEGORY_CHOICES:
+    CATEGORY_DICT[cat[0]]=cat[1]
+################################
+
 def home(request):
     t = loader.get_template('baseApp/welcome.html')
     c = Context(dict())
     return HttpResponse(t.render(c))
     
 def categories_list(request):
-    #return HttpResponse('am here')
-    category_list = EventCategory.objects.all()
+    category_list=CATEGORY_DICT.values()
     return render_to_response('baseApp/categoryView.html', {'category_list':category_list})
+
+def events_list(request,categoryValue):
+    event_list=[]
+    for category in CATEGORY_DICT:
+        if CATEGORY_DICT.get(cat)==categoryValue:
+            event_list = Event.objects.filter(category=category)
+    return render_to_response('baseApp/eventList.html', {'events':event_list})
 
 #def names_list(request):
 #    name_list = Event.objects.all()
@@ -53,10 +81,6 @@ def categories_list(request):
 #    venue_list = Event.objects.filter()
 #    return render_to_response('baseApp/venueView.html', {'venue_list':venue_list})
 
-#class EventForm(ModelForm):
-#    class Meta:
-#        model=Event
-#        exclude=['post','author']
 
 def view_map(request,id):
     event = Event.objects.get(id=id)
@@ -70,10 +94,6 @@ def cart_list(request,id):
     else:
         return HttpResponse('<div align="center"><h5>Cart is empty</h5></div>')
 
-def events_list(request,id):
-    event_list = Event.objects.filter(category__id=id)
-    return render_to_response('baseApp/eventList.html', {'events':event_list})
-
 def isPhone(inp):
     result = re.search(r'^[0][2|5][0|4|3|6|7|8]([0-9]){7}$', inp,re.L)
     # print result.groups() 
@@ -83,10 +103,10 @@ def isPhone(inp):
         return False
      
 @csrf_exempt
-def event_detail(request,id):
-    event = Event.objects.get(id=id)
-    ticketsType=TicketType.objects.filter(event__id=id)
-    allTickets = Ticket.objects.filter(event__id=id)
+def event_detail(request,category):
+    event = Event.objects.get(category=category)
+    ticketsType=TicketType.objects.filter(event=event)
+    allTickets = Ticket.objects.filter(event=event)
     tdate=str(datetime.datetime.today())
     tstr={}
     sum=0
@@ -107,8 +127,8 @@ def event_detail(request,id):
               
             #check if a ticket has been selected    
             if len(tstr)<1:
-                 msg="Please select a ticket"
-                 return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg})                 
+                msg="Please select a ticket"
+                return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg})                 
                    
             try:#Check for the availability of tickets
                 
@@ -143,19 +163,19 @@ def event_detail(request,id):
                             t.paid=True
                             t.cart=cart.cPhone                    
                             t.save()
-                            msg='Ticket has been added to cart successfully click on cart to checkoff or add more to cart'  
+                            msg='Ticket has been added to cart successfully. Click on cart to checkout or add more to cart'  
                             return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg})     
                                 
                     except:
-                        msg='ticket/s cannot be added, try again'
+                        msg='Tickets cannot be added, try again'
                         return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg})                 
                     
                     
                 if len(carte)>1 or len(carte)<0:
-                    msg="a cart exist that you have not paid for"
+                    msg="A cart exists that you have not paid for"
                     return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg}) 
             
-             #add tickets to cart if cart already exists     
+                #add tickets to cart if cart already exists     
                 try:
                     cart=Cart.objects.get(cPhone=request.POST['phone'],paid=False)
                     for k in range(len(tstr)):  
@@ -168,7 +188,7 @@ def event_detail(request,id):
                         t.paid=True
                         t.cart=cart.cPhone                    
                         t.save()
-                        msg='Ticket has been added to cart successfully click on cart to checkoff or add more to cart'  
+                        msg='Ticket has been added to cart successfully. Click on cart to checkout or add more to cart'  
                         return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg})     
                                     
                 except:
@@ -180,9 +200,8 @@ def event_detail(request,id):
                 return HttpResponse('error') 
             
         else:
-            msg='Enter a valid phone number'
+            msg='Please enter a valid phone number'
             return render_to_response('baseApp/eventDetails.html', {'event_details':event,'form':form.as_p(),'ticket_types':ticketsType,'tickets':allTickets,'msg':msg})        
-        
           
     else:
         form = AddForm()
@@ -190,72 +209,61 @@ def event_detail(request,id):
     
 @csrf_exempt
 def addEvent_view(request):
-    categories = EventCategory.objects.all()
-    if request.method == 'POST':
-        try:
+    if request.user.is_authenticated():
+        try:    # Try to get existing profile
             userInfo = UserProfile.objects.get(user=request.user)
-            payForm = PayInForm(request.POST, instance=userInfo)    # A Payment Details form linked to Organizer
-        except:
-            userInfo = None
-            payForm = PayInForm(request.POST)
-            
-        if request.POST.get('addevent', None):
-            categories = EventCategory.objects.get(name=request.POST['category'])
-            #checks if fields are not empty
-            if request.POST.get('name', None) or request.POST.get('venue', None) or request.POST.get('date', None):
-                eventForm = AddEventForm(request.POST)
-                try:
-                    event=Event.objects.get(name=request.POST['name'])
-                    categories = EventCategory.objects.all()
-                    eventForm = AddEventForm()
-                    msg="an event with this name already exists"
-                    return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories,'msg':msg})
-                except:#creates an event
-                    e=Event(name=request.POST['name'],category=categories,venue=request.POST['venue'],
-                    locationX=request.POST['gpsx'],locationY=request.POST['gpsy'],
-                    event_date=request.POST['date'],event_Rep=request.user,created=str(datetime.datetime.today()))
-                    e.save()
-                    event=request.POST['name']
-                    return render_to_response('baseApp/ticket.html', {'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'event':e,'isaddevent':True})
-
-            else:
-                categories = EventCategory.objects.all() 
-                eventForm = AddEventForm()
-                msg="Please fill empty fields to continue"
-                return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories,'msg':msg})
-
-        else:#creates an event type        
-            event=Event.objects.get(name=str(request.POST['name']))
-            tt=TicketType(name=request.POST['ttype'],price=request.POST['price'],event=event)    
-            tt.save()
-            
-            #generate tickets
-            for i in range(int(request.POST['qty'])):
-                pin=int(random.random()*10000000000000)
-                s=int(random.random()*100000000)
-                sn="SN"+str(s)
-                t=Ticket(event=event,ticketType=tt,pin=pin,serialNo=sn)
-                t.save()
-                
-            msg=str(request.POST['qty'])+' '+str(request.POST['ttype'])+" tickets have been generated for "+str(request.POST['name'])
-            eventForm = AddEventForm()
-            return render_to_response('baseApp/ticket.html', {'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'event':event,'isaddevent':True,'msg':msg})
-          
-    else:
-        try:
-            userInfo = UserProfile.objects.get(user=request.user)
-            payForm = PayInForm(instance=userInfo)
-        except:
-            userInfo = None
-            payForm = PayInForm()
-        eventForm = AddEventForm()
-        return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories})
-
+        except: # create profile for user
+            userInfo = UserProfile(user=request.user)        
         
-class SuggestionForm(ModelForm):
-    class Meta:
-        model=Suggestion
-        exclude = ['created',]
+        if request.method == 'POST':                   
+            payForm = PayInForm(request.POST, instance = userInfo)
+            if payForm.is_valid():
+                payForm.save()
+                msg="Pay In Account successfully saved"
+                eventForm = AddEventForm()
+                return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'msg':msg})
+            
+            event=Event(event_Rep=request.user,created=str(datetime.datetime.today()))
+            try:    #try to create an event
+                eventForm = AddEventForm(request.POST, instance=event)
+                if eventForm.is_valid():
+                    eventForm.save()        
+                    ticketType=TicketType(event=event)
+                    ticketTypeForm = TicketTypeForm(request.POST, instance = ticketType)
+                    if ticketTypeForm.is_valid():
+                        ticketTypeForm.save()
+                        tt = TicketType.objects.get(event=event)
+                        
+                    #generate tickets
+                        for i in range(int(request.POST['qty'])):
+                            pin=int(random.random()*10000000000000)
+                            s=int(random.random()*100000000)
+                            sn="SN"+str(s)
+                            t=Ticket(event=event,ticketType=tt,pin=pin,serialNo=sn)
+                            t.save()
+                    
+                        msg=str(request.POST['qty'])+' '+str(tt.name)+" tickets have been generated for "+str(tt.event)
+                        return render_to_response('baseApp/ticket.html', {'ticketTypeForm':ticketTypeForm.as_p(),'logged_in':request.user.is_authenticated(),'msg':msg})
+            
+            
+            except:
+                eventForm = AddEventForm(request.POST, instance=event)
+                msg="an event with this name already exists"
+                return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'msg':msg})               
+   
+        else:
+            payForm = PayInForm(instance=userInfo)
+            event=Event(event_Rep=request.user,created=str(datetime.datetime.today()))
+            eventForm = AddEventForm(instance=event)
+            msg=''
+            return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'msg':msg})
+        
+    else:
+        userInfo =UserProfile()
+        payForm = PayInForm(instance=userInfo)
+        eventForm = AddEventForm()
+        msg=''
+        return render_to_response('baseApp/addEvent.html', {'user':userInfo,'payForm':payForm.as_p(),'eventForm':eventForm.as_p(),'logged_in':request.user.is_authenticated(),'msg':msg})
 
 @csrf_exempt
 def addSuggestion(request):
@@ -307,9 +315,7 @@ def ticket_view(request):
     return HttpResponse('cut') 
 
 @csrf_exempt
-def Cart_view(request): 
-    suggestions = Suggestion.objects.all()
-    comment = Suggestion()
+def Cart_view(request):
     if request.method == 'POST':
         if request.POST.get("phone", None): 
             cart=Cart.objects.filter(cPhone=request.POST['phone'],paid=False)
@@ -328,6 +334,3 @@ def aboutus(request):
 @csrf_exempt
 def suggest_view(request): 
     pass 
-
-
-

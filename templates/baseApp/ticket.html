@@ -18,12 +18,8 @@
 
 {% if logged_in %}
 <form  method="post" data-ajax="false">
-{{ eventForm.as_p }}
+{{ ticketTypeForm }}
 <div data-role="fieldcontain">
-<p><li>{{event}}</li></p>
-<p><input name="name" type="hidden" value="{{event}}" /></p>
-<p>Ticket Type: <input name="ttype" type="text" value="" /></p>
-<p>Ticket Price: <input name="price" type="text" value="" /></p>
 <p>Quantity: <input name="qty" type="text" value="" /></p>
 </div>
 <input type="submit" value="Generate Tickets" data-icon="plus" data-iconpos="right" data-theme="b" /></p>
@@ -35,7 +31,7 @@
 {%else%}
 
 <h4>Please login to access this page<h4>
-<a href="reg/login/" rel="external">Login</a>
+<a href="reg/login" rel="external">Login</a>
 {%endif%}
 </div>
 </div> 

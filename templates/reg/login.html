@@ -2,7 +2,7 @@
 {% block content %}
 <div  data-role="page" data-theme="Swatch D"> 
 <div align="center" data-role="header" data-theme="b">
-<a href="../../../baseApp/" rel="external">Back</a><p>Create an account</p><a href='../../../baseApp' rel="external", data-ajax="false">Home</a>
+<a href="../../../baseApp/" rel="external">Back</a><p>Login to your account</p><a href='../../../baseApp' rel="external", data-ajax="false">Home</a>
 </div> 	
 <div data-role="content">
 <ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
@@ -13,7 +13,7 @@
 <p class="ui-li-desc">
 <div align="center">
 	{% if logged_in %}
-		<div>You are already logged in. <a href='../logout' data-ajax="false">Logout here</a></div>
+		<div>You are already logged in. <a href='../reg/logout' data-ajax="false">Logout here</a></div>
 	{% else %}
     <form action="." method="POST" data-ajax="false">
     {% csrf_token %} 

@@ -25,6 +25,11 @@ indexes:
   - name: __key__
     direction: desc
 
+- kind: baseApp_incomingsms
+  properties:
+  - name: __key__
+    direction: desc
+
 - kind: baseApp_outgoingsms
   properties:
   - name: __key__

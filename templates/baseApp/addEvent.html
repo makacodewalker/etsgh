@@ -21,27 +21,11 @@
 
 {% if logged_in %}
 <form method='post' action="" data-ajax="false">
-{{ payForm.as_p }}
-<input type='submit' name='Submit' value="Save Account">
+{{ payForm }}
+<input type='submit' name='Submit' value="Save Account"  data-iconpos="right" data-theme="b" />
 </form>
 <form  method="post" data-ajax="false">
-{{ eventForm.as_p }}
-<div data-role="fieldcontain">
-<input name="addevent" type="hidden" value="addevent" />
-<p>Event name: <input name="name" type="text" value="" /></p>
-<p>Date and time: <input name="date" type="text" value="" /></p>
-<p>Event category:
-<select width="5" "selectmenu" name="category" id="select-choice-1" data-role="none">
-{% for cat in categories %}
-<option value="{{ cat.name }}">{{ cat.name }}</option>
-{% endfor %}
-</select>
-</p> 
-</div>
-
-<p>Venue: <input name="venue" type="text" value="" /></p>
-<p>GPS coordX: <input name="gpsx" type="text" value="" /></p>
-<p>GPS coordY: <input name="gpsy" type="text" value="" /></p>
+{{ eventForm }}
 <input type="submit" value="Create Tickets" data-icon="plus" data-iconpos="right" data-theme="b" /></p>
 </form>
 </li>
@@ -50,7 +34,7 @@
 {% else %}
 
 <h4>Please login to add event<h4>
-<a href="reg/login/" rel="external">Login</a>
+<a href="reg/login" rel="external">Login</a>
 
 {% endif %}
 </div>

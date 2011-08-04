@@ -21,41 +21,55 @@ PAYMENT_CHOICES = (
     ('ezw', 'Ezwich'),
 )
 
+CATEGORY_CHOICES = (
+    ('sp_ftb','Football'),
+    ('sp_bask','Basketball'),
+    ('sp_box','Boxing'),
+    ('sp_atl','Athletics'),
+    ('sp_oth','Other (Sports)'),
+    ('biz_conf','Conference'),
+    ('biz_oth','Other (Business)'),
+    ('ent_conc','Musical Concert'),
+    ('ent_ply','Theatre/ Play'),
+    ('ent_mov','Movie'),
+    ('ent_comp','Competition'),
+    ('ent_pty','Party'),
+    ('ent_oth','Other (Ent)'),
+    ('misc','Miscellaneous'),
+)
+     
 class UserProfile(models.Model):
     user = models.OneToOneField(User)        # This field is required.
     mobileNo =models.CharField(max_length=14)
     payInMethod = models.CharField(max_length=5, choices=PAYMENT_CHOICES, blank=True)
     payInAcctNo = models.CharField(max_length=25, blank=True)
     def __unicode__(self):
-        return self.user
+        return self.user.username
 '''
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user','phone','natID')
     search_fields = ('user',)
 '''
 
-class EventCategory(models.Model):
-    name = models.CharField(max_length=30)
-    created=models.DateField(auto_now_add=True)# to check the time the event was created
-    def __unicode__(self):
-        return self.name
+#class EventCategory(models.Model):
+#    name = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
+#    def __unicode__(self):
+#        return self.name
 '''
 class EventCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name','created')
+    list_display = ('name',)
     search_fields = ('name',)
-    list_filter = ('created',)
     #inlines = [EventInLine]
 '''
 
 class Event(models.Model):
-    name = models.CharField(max_length=30)
-    category = models.ForeignKey(EventCategory)
+    name = models.CharField(max_length=30, unique=True)
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
     venue = models.CharField(max_length=30)
-    locationX = models.CharField(max_length=30,blank=True)# *
-    locationY = models.CharField(max_length=30,blank=True)# *
+    #locationX = models.CharField(max_length=30,blank=True)# *
+    #locationY = models.CharField(max_length=30,blank=True)# *
     event_date=models.CharField(max_length=30)
     created=models.DateField(auto_now_add=True)
-    #event_Rep=models.ForeignKey(EventOrganizer)
     event_Rep=models.ForeignKey(User)   
     #poster = models.ImageField(upload_to='/tmp',null=True) 
     def __unicode__(self):
@@ -159,7 +173,6 @@ class IncomingSMSAdmin(admin.ModelAdmin):
 '''
 
 admin.site.register(UserProfile)
-admin.site.register(EventCategory)
 admin.site.register(Event)
 admin.site.register(Ticket)
 admin.site.register(TicketType)
