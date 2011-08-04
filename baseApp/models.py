@@ -26,16 +26,15 @@ CATEGORY_CHOICES = (
     ('sp_bask','Basketball'),
     ('sp_box','Boxing'),
     ('sp_atl','Athletics'),
-    ('sp_oth','Other (Sports)'),
+    ('sp_oth','Other Sport'),
     ('biz_conf','Conference'),
-    ('biz_oth','Other (Business)'),
+    ('biz_oth','Other Business Event'),
     ('ent_conc','Musical Concert'),
-    ('ent_ply','Theatre/ Play'),
+    ('ent_ply','Play/ Theatre'),
     ('ent_mov','Movie'),
     ('ent_comp','Competition'),
     ('ent_pty','Party'),
-    ('ent_oth','Other (Ent)'),
-    ('misc','Miscellaneous'),
+    ('ent_oth','Other Event'),
 )
      
 class UserProfile(models.Model):
