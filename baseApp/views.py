@@ -18,11 +18,11 @@ from django.forms.extras.widgets import *
     
 class AddForm(forms.Form):
     pass
-    
-class CartForm(ModelForm):
-    class Meta:
-        model =Cart
-
+#    
+#class CartForm(ModelForm):
+#    class Meta:
+#        model =Cart
+#
 
 class TicketTypeForm(ModelForm):
     class Meta:
@@ -43,18 +43,14 @@ class AddEventForm(ModelForm):
         model=Event
         exclude=['created','event_Rep']
         
-class SuggestionForm(ModelForm):
-    class Meta:
-        model=Suggestion
-        exclude = ['created',]
-
+        
 # Used to process Categories
 CATEGORY_DICT = {}
 for cat in CATEGORY_CHOICES:
     CATEGORY_DICT[cat[0]]=cat[1]
 ################################
 
-def home(request):
+def ticketHome(request):
     t = loader.get_template('baseApp/welcome.html')
     c = Context(dict())
     return HttpResponse(t.render(c))
@@ -84,12 +80,12 @@ def view_map(request,id):
     ticketsType=TicketType.objects.filter(event__id=id)
     return render_to_response('baseApp/map.html', {'event_details':event})
 
-def cart_list(request,id):
-    if id:        
-        cart = Ticket.objects.filter(Cart__id=id)
-        return render_to_response('baseApp/cart.html', {'cart':cart})
-    else:
-        return HttpResponse('<div align="center"><h5>Cart is empty</h5></div>')
+#def cart_list(request,id):
+#    if id:        
+#        cart = Ticket.objects.filter(Cart__id=id)
+#        return render_to_response('baseApp/cart.html', {'cart':cart})
+#    else:
+#        return HttpResponse('<div align="center"><h5>Cart is empty</h5></div>')
 
 def isPhone(inp):
     result = re.search(r'^[0][2|5][0|4|3|6|7|8]([0-9]){7}$', inp,re.L)
@@ -271,69 +267,14 @@ def addEvent_view(request):
 def ticket_view(request): 
     return HttpResponse('cut') 
 
-@csrf_exempt
-def Cart_view(request):
-    if request.method == 'POST':
-        if request.POST.get("phone", None): 
-            cart=Cart.objects.filter(cPhone=request.POST['phone'],paid=False)
-            return render_to_response('baseApp/cartlist.html', {'cart':cart })
-    else:
-        form = CartForm()
-        #end of form code
-        return render_to_response('baseApp/cart.html', {'form':form.as_p() })
-
-
-@csrf_exempt
-def addSuggestion(request):
-    suggestions = Suggestion.objects.all()
-    msg=''
-    #Start of form code
-    comment = Suggestion()
-    if request.method == 'POST':
-        if request.user.is_authenticated():
-            comment = Suggestion(name=request.user.username)
-        else:
-            comment = Suggestion()
-
-        form = SuggestionForm(request.POST, instance = comment)
-        if form.is_valid():
-            form.save()
-            msg = 'Your suggestion has been saved'
-            return render_to_response('baseApp/suggestions.html', {'suggestions':suggestions,'msg':msg,'form':form.as_p() })
-    else:
-        form = SuggestionForm()
-        #end of form code
-        return render_to_response('baseApp/suggestions.html', {'suggestions':suggestions,'msg':msg,'form':form.as_p() })
-
-
 #@csrf_exempt
-#def editSuggestion(request, id):
-#	msg=''
-#	comment = Suggestion.objects.get(id=id)
-#	#Start of form code
-#	if request.user == suggestion.consumer:
-#		if request.method == 'POST':
-#			form = SuggestionForm(request.POST, instance = comment)
-#			if form.is_valid():
-#				form.save()
-#				msg = 'Your suggestion has been saved'
-#				return render_to_response('baseApp/editsuggestion.html', {'msg':msg,'form':form.as_p() })	
-#		else:
-#			form = SuggestionForm(instance = comment)
-#			#end of form code
-#			return render_to_response('baseApp/editsuggestion.html', {'msg':msg,'form':form.as_p() })
-#	else:
-#		msg = 'You do not have permission to edit this comment'
-#		return render_to_response('baseApp/editsuggestion.html', {'msg':msg,'form':form.as_p() })
-#        form = AddEventForm() 
-#        return render_to_response('baseApp/addEvent.html', {'form':form.as_p(),'logged_in':request.user.is_authenticated(),'categories':categories})
+#def Cart_view(request):
+#    if request.method == 'POST':
+#        if request.POST.get("phone", None): 
+#            cart=Cart.objects.filter(cPhone=request.POST['phone'],paid=False)
+#            return render_to_response('baseApp/cartlist.html', {'cart':cart })
+#    else:
+#        form = CartForm()
+        #end of form code
+#        return render_to_response('baseApp/cart.html', {'form':form.as_p() })
 
-
-@csrf_exempt
-def aboutus(request): 
-    return HttpResponse('cut') 
-
-
-@csrf_exempt
-def suggest_view(request): 
-    pass 

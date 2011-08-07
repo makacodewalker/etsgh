@@ -27,7 +27,18 @@
   </head>
 
   <body data-role="page" data-theme="Swatch D">
-    <div id="header" id="logo" align="center" data-role="header" data-theme="b">Welcome to Synapis!</div>
+    <div id="header" id="logo" align="center" data-role="header" data-theme="e"><p>Welcome to Synapis Mobile</p></div>
+
+	<div align="center" data-role="header" data-theme="b">
+		<div data-role="navbar">
+			<ul>
+			<li><a href='reg/signup' rel="external", data-ajax="false">SIGN UP</a></li> 
+			<li><a href="payment/viewcart" rel="external">CART</a></li>
+			<li><a href='reg/login' rel="external", data-ajax="false">MEMBERS' SIGN IN</a></li>
+			</ul>
+		</div>
+	</div>
+
 
     <div class="columns">
       <div id="content" class="column">
@@ -41,17 +52,7 @@
           {% endif %}
         {% endblock %}
 
-		{% block sign %}
-			<div align="center" data-role="header" data-theme="b">
-				<div data-role="navbar">
-				<ul>
-				<li><a href='reg/signup' rel="external", data-ajax="false">Signup</a></li> 
-				<li><a href='' rel="external", data-ajax="false">Home</a></li>
-				<li><a href='reg/login' rel="external", data-ajax="false">Login/Logout</a></li>
-				</ul>
-				</div>
-			</div>
-		{% endblock %}
+		{% block sign %}{% endblock %}
 		
         {% block content %}{% endblock %}
       </div>
@@ -65,10 +66,9 @@
     <div align="center" data-role="footer" data-theme="b">
 	<div data-role="navbar">
 		<ul>
-			<li><a href="aboutus" rel="external">About us</a></li>
-			<li><a href="">Help</a></li>
-			<li><a href="viewcart" rel="external">Cart</a> </li>
-			<li><a href="http://www.allbuttonspressed.com/projects/django-nonrel">Powered by Django-nonrel</a></p>
+			<li><a href="search" rel="external">SEARCH</a></li>
+			<li><a href="suggestions" rel="external", data-ajax="false">SUGGESTION BOX</a></li>
+			<li><a href="help"  rel="external">HELP!</a></li>
     	</ul>
 	</div>	
     </div>

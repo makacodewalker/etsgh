@@ -11,6 +11,36 @@ import time
 import re
 # Create your views here.
 
+
+
+class OutgoingSMSForm(ModelForm):
+    class Meta:
+        model = OutgoingSMS
+        exclude = ['receiver','message','sent','created']
+    
+class CartForm(ModelForm):
+    class Meta:
+        model =Cart
+
+def cart_list(request,id):
+    if id:        
+        cart = Ticket.objects.filter(Cart__id=id)
+        return render_to_response('payment/cart.html', {'cart':cart})
+    else:
+        return HttpResponse('<div align="center"><h5>Cart is empty</h5></div>')
+
+@csrf_exempt
+def Cart_view(request):
+    if request.method == 'POST':
+        if request.POST.get("phone", None): 
+            cart=Cart.objects.filter(cPhone=request.POST['phone'],paid=False)
+            return render_to_response('payment/cartlist.html', {'cart':cart })
+    else:
+        form = CartForm()
+        #end of form code
+        return render_to_response('payment/cart.html', {'form':form.as_p() })
+
+
 def processIncomingSMS(request):    # processes all sms received from mobile money providers
     time.sleep(10)
     smsleft = IncomingSMS.objects.filter(read = False)
@@ -19,11 +49,6 @@ def processIncomingSMS(request):    # processes all sms received from mobile mon
         sms.transactionID = result.group(2)
         sms.amount = result.group(4)
 
-
-class OutgoingSMSForm(ModelForm):
-    class Meta:
-        model = OutgoingSMS
-        exclude = ['receiver','message','sent','created']
         
 def redeemCart(request, phoneNumber, transID='blank'): # Get cart thats unpaid for
     cartRecords = Cart.objects.filter(cPhone = phoneNumber)

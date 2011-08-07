@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
 {% block sign %}
- 
-<div align="center" data-role="header" data-theme="b">
-<p>Create an account</p>
+<div align="center" data-role="header" >
+<p>Create Your Account</p>
 </div> 	
 <div data-role="content">
 <ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
@@ -32,7 +34,7 @@
     {% endif %}
     <p> <label for="id_password2">Password again:</label> {{ form.password2 }} </p>
 
-    <p> <input type="submit" value="Sign Up" /> </p>
+    <p> <input type="submit" value="Sign Up" data-theme="b"/> </p>
   </label>
 </li>
 </ul>

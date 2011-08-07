@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
+
+{% block title %}{{ event_details.name }}{% endblock %}
+
 {% block content %}
-<div  data-role="page" data-theme="Swatch D"> 
-<div align="center" data-role="header" data-theme="b">
+
+<div align="center" data-role="header">
 <a href="/baseApp/events/{{event_details.category.id}}" rel="external">Back</a><p>Event Detail</p>		
 </div> 	
 <form method="post" data-ajax="false">

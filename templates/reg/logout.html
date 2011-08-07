@@ -1,25 +1,20 @@
 {% extends 'base.html' %}
+
+{% block title %}Sign Out{% endblock %}
+
 {% block sign %}
 
-<div align="center" data-role="header" data-theme="b">
+<div align="center" data-role="header">
 <p>Create an account</p></div> 	
 <div data-role="content">
 <ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
 <li class="ui-li ui-li-static ui-body-c ui-corner-top">
-<p class="ui-li-aside ui-li-desc">
-
-</p>
+<p class="ui-li-aside ui-li-desc"></p>
 <p class="ui-li-desc">
 <div align="center">
-
-You have been successfully logged out. <br />
-<a href='../reg/login' rel="external", data-ajax="false">login here</a>
-
+You have been successfully logged out. <a href='reg/login' rel="external", data-ajax="false">Login here</a>
+</div>
 </li>
-</ul>
-<div>
-<div>
-</div> 
-</div> 
+</ul> 
 </div> 
 {% endblock %}

@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
+
+{% block title %}Tickets{% endblock %}
+
 {% block content %}	
 	
-<div align="center" data-role="page" id="map" data-theme="Swatch D">
-<div>
+<div align="center" data-role="page" id="map" >
+
 <div align="center" data-role="header" data-theme="b">
-<a href="../baseApp/addEvent" rel="external">Back</a><p>Generate ticket</p></p><a href='../baseApp' rel="external", data-ajax="false">Done</a>		
+<p>Generate tickets</p>		
 </div> 	
 <div data-role="content">
 
 <ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
 <li class="ui-li ui-li-static ui-body-c ui-corner-top">
-<p class="ui-li-aside ui-li-desc">
-
-</p>
+<p class="ui-li-aside ui-li-desc"></p>
 <p class="ui-li-desc">
-<div align="center">
 
+<div align="center">
 {% if logged_in %}
 <form  method="post" data-ajax="false">
 {{ ticketTypeForm }}

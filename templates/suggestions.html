@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Suggestions{% endblock %}
+
+{% block content %}
+
+<div align="center" data-role="header"><p>We need your suggestions</p></div> 	
+
+<div data-role="content">{{ msg }}
+<!-- <ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" > -->
+<li class="ui-li ui-li-static ui-body-c ui-corner-top">
+<p class="ui-li-aside ui-li-desc"></p>
+<p class="ui-li-desc">
+
+<ul>
+{% for suggestion in suggestions %}
+<li><div data-role="content"  data-theme="c">
+<p>{{ suggestion.suggestion|linebreaks }}</p>
+<p>Posted by {{ suggestion.author }}, on {{ suggestion.created }}</p>
+<a href="editsuggestion/{{ suggestion.id }}" rel="external", data-ajax="false">Edit</a></div></li>
+{% endfor %}
+</ul>
+
+<form method='post' action="" data-ajax="false">
+{{ form }}
+<input type='submit' name='Submit' value="Submit">
+</form>
+
+</div>  
+
+{% endblock %}

@@ -1,28 +1,20 @@
 {% extends 'base.html' %}
-{% block title %}Synapis Mobile{% endblock %}
+{% block title %}Synapis E-Ticketing{% endblock %}
 
 {% block content %}
-
-<div  data-role="page" data-theme="Swatch D"> 
-		<div align="center" data-role="header" data-theme="b">
-		<p>Welcome to ETS</p>		
-		</div> 
-		<div align="center" data-role="content">
+<div align="center" data-role="header" ><p>E-Ticket Service</p></div> 
+	
+	<div align="center" data-role="header" data-theme="c" ><p>Most Liked Events</p>
+		<ul data-role="listview"  data-theme="c">
+			<li><a href="bycategory" rel="external", data-ajax="false"><img src="/static/images/1.jpg" height="225" > name if possible</a></li>			
+			<li><a href="bycategory" rel="external", data-ajax="false"><img src="/static/images/2.jpg" height="225" > name if possible</a></li>
+			<li><a href="bycategory" rel="external", data-ajax="false"><img src="/static/images/3.jpg" height="225" > name if possible</a></li>
+		</ul>
+	</div>
 		
+	<div align="center" data-role="header" ><p>Menu</p></div>
 		<ul data-role="listview" data-theme="c">
-			<li><a href="bycategory" rel="external", data-ajax="false">Categories</a></li>			
-			<li><a href="addEvent"rel="external", data-ajax="false" >Add Event</a></li>
-			<li><a href="suggestions" rel="external", data-ajax="false">Suggestions</a></li>
-		</ul>  
-
-		<div align="left" data-role="content">
-			<p><h4>Most Liked</h4></p>
-			<div data-role="header" data-position="inline" data-theme="g">
-				<img src="/static/images/1.jpg" height="225" >
-				<img src="/static/images/2.jpg" height="225" >
-				<img src="/static/images/3.jpg" height="225" >
-			</div>
-		</div>   
-
-</div> 
+			<li><a href="bycategory" rel="external", data-ajax="false">Browse For An Event</a></li>			
+			<li><a href="addEvent"rel="external", data-ajax="false" >Create Your Own Event</a></li>	
+		</ul>  	
 {% endblock %}

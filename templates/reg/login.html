@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
+
+{% block title %}Sign In{% endblock %}
+
 {% block sign %}
  
-<div align="center" data-role="header" data-theme="b">
+<div align="center" data-role="header">
 <p>Login to your account</p></div> 	
 <div data-role="content">
 <ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
@@ -10,9 +13,9 @@
 
 </p>
 <p class="ui-li-desc">
-<div align="center">
+<div align="center" >
 	{% if logged_in %}
-		<div>You are already logged in. <a href='../reg/logout' data-ajax="false">Logout here</a></div>
+		<div>You are already logged in. <a href='reg/logout' data-ajax="false">Logout here</a></div>
 	{% else %}
     <form action="." method="POST" data-ajax="false">
     {% csrf_token %} 
@@ -22,7 +25,7 @@
                 {{ field.label_tag }} {{ field }}
             </div>
         {%  endfor %}
-    <input type="submit" value="Login" />
+    <input type="submit" value="Login" data-theme="b"/>
     </form>
     {{ ct }}
 	{% endif %}

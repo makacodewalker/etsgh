@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
+
+{% block title %}Add Event{% endblock %}
+
+
 {% block content %}
-<div data-role="page" data-theme="Swatch D">
-<div align="center" data-role="header" data-theme="b">
-<a href="/baseApp/" rel="external">Back</a></p><a href='/baseApp' rel="external", data-ajax="false">Home</a>
+
+<div align="center" data-role="header" >
 <p>Add Event </p>		
 </div> 
 <div>
-
-
-
-
-
 <ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
 <li class="ui-li ui-li-static ui-body-c ui-corner-top">
 <p class="ui-li-aside ui-li-desc">
@@ -22,7 +20,7 @@
 {% if logged_in %}
 <form method='post' action="" data-ajax="false">
 {{ payForm }}
-<input type='submit' name='Submit' value="Save Account"  data-iconpos="right" data-theme="b" />
+<input type='submit' name='Submit' value="Save Details (This Is How We Pay You)"  data-iconpos="right" data-theme="b" />
 </form>
 <form  method="post" data-ajax="false">
 {{ eventForm }}
@@ -38,7 +36,6 @@
 <a href="reg/login" rel="external">Login</a>
 
 {% endif %}
-</div>
 </div>
 {% endblock %}
 

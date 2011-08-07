@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 #    class Meta:
 #        model = UserProfile
 
-def home(request):
+def regHome(request):
     t = loader.get_template('reg/base.html')
     c = Context(dict())
     return HttpResponse(t.render(c))

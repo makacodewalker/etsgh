@@ -40,8 +40,8 @@ CATEGORY_CHOICES = (
 class UserProfile(models.Model):
     user = models.OneToOneField(User)        # This field is required.
     mobileNo =models.CharField(max_length=14)
-    payInMethod = models.CharField(max_length=5, choices=PAYMENT_CHOICES, blank=True)
-    payInAcctNo = models.CharField(max_length=25, blank=True)
+    paymentMethod = models.CharField(max_length=5, choices=PAYMENT_CHOICES, blank=True)
+    accountNum = models.CharField(max_length=25, blank=True)
     def __unicode__(self):
         return self.user.username
 '''
@@ -129,8 +129,8 @@ class TicketAdmin(admin.ModelAdmin):
 '''     
 
 class Suggestion(models.Model):
-    name =  models.CharField(max_length=30,blank=True)
-    suggestion =  models.TextField(max_length=30)
+    author =  models.CharField(max_length=30,blank=True)
+    suggestion =  models.TextField(max_length=255,blank=True)
     created=models.DateField(auto_now_add=True)   
     def __unicode__(self):
         return self.suggestion 

@@ -6,6 +6,12 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'views.home', name='home'),
+    url(r'^aboutus$', 'views.aboutUs'),
+    url(r'^search$', 'views.search'),
+    url(r'^help$', 'views.siteHelp'),
+    url(r'^suggestions$', 'views.addSuggestion'),
+    url(r'^editsuggestion/(?P<id>\d+)$', 'views.editSuggestion'),
+
     # url(r'^ETS/', include('ETS.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -14,6 +20,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^baseApp/', include('baseApp.urls')),
+    url(r'^payment/', include('payment.urls')),
     url(r'^reg/', include('reg.urls')),
 )	
 
