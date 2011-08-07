@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+
+<div align="center" data-role="header"><p>Your Cart</p>
+</div> 	
+<div data-role="content">
+<ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
+<li class="ui-li ui-li-static ui-body-c ui-corner-top">
+<p class="ui-li-aside ui-li-desc">
+</p>
+<p class="ui-li-desc">
+<div align="center">
+<p>
+Please enter Phone Number to view Cart
+</p>
+
+<form method='post' action="" data-ajax="false">
+<p>Phone: <input type='text' name='phone' value=""></p>
+<input type='submit' name='Submit' value="Submit" data-theme="b">
+</form>
+
+</div> 
+</div> 
+
+
+
+{% endblock %}
+

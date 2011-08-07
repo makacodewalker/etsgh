@@ -17,7 +17,7 @@
 <li><div data-role="content"  data-theme="c">
 <p>{{ suggestion.suggestion|linebreaks }}</p>
 <p>Posted by {{ suggestion.author }}, on {{ suggestion.created }}</p>
-<a href="editsuggestion/{{ suggestion.id }}" rel="external", data-ajax="false">Edit</a></div></li>
+<a href="editsuggestion_{{ suggestion.id }}" rel="external", data-ajax="false">Edit</a></div></li>
 {% endfor %}
 </ul>
 

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Event{% endblock %}
+
+
+{% block content %}
+
+<div align="center" data-role="header" >
+<p>Add Event </p>		
+</div> 
+<div>
+<ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
+<li class="ui-li ui-li-static ui-body-c ui-corner-top">
+<p class="ui-li-aside ui-li-desc">
+
+</p>
+<p class="ui-li-desc">
+<div align="center">
+
+{% if logged_in %}
+<form method='post' action="" data-ajax="false">
+{{ payForm }}
+<input type='submit' name='Submit' value="Save Details (This Is How We Pay You)"  data-iconpos="right" data-theme="b" />
+</form>
+<form  method="post" data-ajax="false">
+{{ eventForm }}
+<input type="submit" value="Create Tickets" data-icon="plus" data-iconpos="right" data-theme="b" /></p>
+</form>
+</li>
+<li><h5 align="center"><a align="center">{{msg}}</a></h5></li>
+</ul>
+
+{% else %}
+
+<h4>Please login to add event<h4>
+<a href="reg_login" rel="external">Login</a>
+
+{% endif %}
+</div>
+{% endblock %}
+
+

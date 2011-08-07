@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block sign %}
+<div align="center" data-role="header" >
+<p>Create Your Account</p>
+</div> 	
+<div data-role="content">
+<ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
+<li class="ui-li ui-li-static ui-body-c ui-corner-top">
+<p class="ui-li-aside ui-li-desc">
+</p>
+<p class="ui-li-desc">
+<div align="center">
+
+  <form action="." method="post" data-ajax="false">
+    {% if form.error_dict %}
+      <p class="error">Please correct the errors below.</p>
+    {% endif %}
+
+    {% if form.username.errors %}
+      {{ form.username.html_error_list }}
+    {% endif %}
+   <p><label for="id_username">Enter username:</label> {{ form.username }}</p>
+
+    {% if form.password1.errors %}
+      {{ form.password1.html_error_list }}
+    {% endif %}
+     <p><label for="id_password1">Enter password:</label> {{ form.password1 }} </p>
+
+    {% if form.password2.errors %}
+      {{ form.password2.html_error_list }}
+    {% endif %}
+    <p> <label for="id_password2">Password again:</label> {{ form.password2 }} </p>
+
+    <p> <input type="submit" value="Sign Up" data-theme="b"/> </p>
+  </label>
+</li>
+</ul>
+</div> 
+{% endblock %}

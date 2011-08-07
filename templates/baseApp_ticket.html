@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Tickets{% endblock %}
+
+{% block content %}	
+	
+<div align="center" data-role="page" id="map" >
+
+<div align="center" data-role="header" data-theme="b">
+<p>Generate tickets</p>		
+</div> 	
+<div data-role="content">
+
+<ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
+<li class="ui-li ui-li-static ui-body-c ui-corner-top">
+<p class="ui-li-aside ui-li-desc"></p>
+<p class="ui-li-desc">
+
+<div align="center">
+{% if logged_in %}
+<form  method="post" data-ajax="false">
+{{ ticketTypeForm }}
+<div data-role="fieldcontain">
+<p>Quantity: <input name="qty" type="text" value="" /></p>
+</div>
+<input type="submit" value="Generate Tickets" data-icon="plus" data-iconpos="right" data-theme="b" /></p>
+</form>
+</li>
+<li><h5 align="center"><a align="center">{{msg}}</a></h5></li>
+</ul>
+
+{%else%}
+
+<h4>Please login to access this page<h4>
+<a href="reg_login" rel="external">Login</a>
+{%endif%}
+</div>
+</div> 
+
+{% endblock %}

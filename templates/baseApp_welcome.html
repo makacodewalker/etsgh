@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Synapis E-Ticketing{% endblock %}
+
+{% block content %}
+<div align="center" data-role="header" ><p>E-Ticket Service</p></div> 
+	
+	<div align="center" data-role="header" data-theme="c" ><p>Most Liked Events</p>
+		<ul data-role="listview"  data-theme="c">
+			<li><a href="baseApp_bycategory" rel="external", data-ajax="false"><img src="/static/images/1.jpg" height="225" > name if possible</a></li>			
+			<li><a href="baseApp_bycategory" rel="external", data-ajax="false"><img src="/static/images/2.jpg" height="225" > name if possible</a></li>
+			<li><a href="baseApp_bycategory" rel="external", data-ajax="false"><img src="/static/images/3.jpg" height="225" > name if possible</a></li>
+		</ul>
+	</div>
+		
+	<div align="center" data-role="header" ><p>Menu</p></div>
+		<ul data-role="listview" data-theme="c">
+			<li><a href="baseApp_bycategory" rel="external", data-ajax="false">Browse For An Event</a></li>			
+			<li><a href="baseApp_addEvent"rel="external", data-ajax="false" >Create Your Own Event</a></li>	
+		</ul>  	
+{% endblock %}

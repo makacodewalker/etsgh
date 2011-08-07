@@ -17,7 +17,7 @@ from django.core.urlresolvers import reverse
 #        model = UserProfile
 
 def regHome(request):
-    t = loader.get_template('reg/base.html')
+    t = loader.get_template('reg_base.html')
     c = Context(dict())
     return HttpResponse(t.render(c))
     
@@ -28,10 +28,10 @@ def signupView(request):
         new_user = form.save()
         new_user = authenticate(username = form.cleaned_data['username'],password = form.cleaned_data['password1'])
         login(request, new_user)
-        return render_to_response('reg/login.html', { 'form':form,'logged_in': request.user.is_authenticated() })
+        return render_to_response('reg_login.html', { 'form':form,'logged_in': request.user.is_authenticated() })
         
     #return render_to_response("reg/signup.html", {'form' : forms.FormWrapper(form, data, errors)} )
-    return render_to_response("reg/signup.html", {'form' : form })
+    return render_to_response("reg_signup.html", {'form' : form })
 # Extras that didn't work out 'name_error_msg': 'Sorry, this username has already been taken.', 'passwd_error_msg':'Passwords do not match.'
 
 @csrf_exempt
@@ -43,7 +43,7 @@ def loginView(request):
     
     if request.user.is_authenticated():
         #return HttpResponseRedirect(reverse('reg:login'))
-        return render_to_response('reg/login.html', { 'auth_form': auth_form,'title': 'User Login','logged_in': request.user.is_authenticated() })
+        return render_to_response('reg_login.html', { 'auth_form': auth_form,'title': 'User Login','logged_in': request.user.is_authenticated() })
         
     # Ye Olde next param so common in login.
     # I send them to their default profile view.
@@ -53,13 +53,13 @@ def loginView(request):
     if auth_form.is_valid():
         login(request, auth_form.get_user())
         #return HttpResponseRedirect(nextpage)
-        return render_to_response('reg/login.html', { 'auth_form': auth_form,'title': 'User Login','logged_in': request.user.is_authenticated() })
+        return render_to_response('reg_login.html', { 'auth_form': auth_form,'title': 'User Login','logged_in': request.user.is_authenticated() })
     
     #return render(request, 'reg/login.html', {'auth_form': auth_form,'title': 'User Login','next': nextpage })
-    return render_to_response('reg/login.html', { 'auth_form': auth_form,'title': 'User Login','logged_in': request.user.is_authenticated() })
+    return render_to_response('reg_login.html', { 'auth_form': auth_form,'title': 'User Login','logged_in': request.user.is_authenticated() })
    
    
 @csrf_exempt
 def logoutView(request):
     logout(request)
-    return render_to_response('reg/logout.html')# Create your views here.
+    return render_to_response('reg_logout.html')# Create your views here.

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Categories{% endblock %}
+
+{% block content %}
+
+<div>
+<div align="center" data-role="header" >
+<p>Event Categories</p></div> 
+{% for category in category_list %}
+<ul data-role="listview" data-theme="c">
+<li><a href="baseApp_events_{{ category }}" rel="external", data-ajax="false">{{ category }}</a></li>	
+</ul>
+{% endfor %}
+</div>
+
+{% endblock %}
+

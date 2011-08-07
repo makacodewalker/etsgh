@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event_details.name }}{% endblock %}
+
+{% block content %}
+
+<div align="center" data-role="header">
+<a href="baseApp_events_{{event_details.category.id}}" rel="external">Back</a><p>Event Detail</p>		
+</div> 	
+<form method="post" data-ajax="false">
+<div>
+{{ form }}
+
+<ul class=" ui-listview ui-listview-inset ui-corner-all ui-shadow " data-inset="true" data-role="listview" >
+<li class="ui-li ui-li-static ui-body-c ui-corner-top">
+<p class="ui-li-aside ui-li-desc">
+<strong>Rating</strong>
+</p>
+<h3 class="ui-li-heading">{{ event_details.name }}</h3>
+<p class="ui-li-desc">
+<strong>{{ event_details.venue}}</strong>
+</p>
+<p class="ui-li-desc">{{ event_details.event_date}}</p>
+</li>
+<li class="ui-li ui-li-static ui-body-c ui-corner-bottom">
+<p class="ui-li-aside ui-li-desc">
+<strong></strong>
+
+</p>
+<h4 class="ui-li-heading">Ticket</h4>
+<p class="ui-li-desc">
+<strong></strong>
+</p>
+{% for ttype in ticket_types %}
+<div data-position="inline">
+
+<p class="ui-li-desc" >
+<input type="checkbox" name="{{ttype}}" value="{{ttype}}" /> {{ttype}} : GHC{{ttype.price}}
+</p>
+</div>
+{% endfor %}
+
+<div>
+<p>Phone:  <input name="phone" type="text" value="" /></p>
+<input name="{{ttype}}" type="submit" value="Add to cart..." data-icon="plus" data-iconpos="right" data-theme="b"/>
+</div>
+</li>
+<li><h5 align="center"><a align="center">{{msg}}</a></h5></li>
+<li><a href="baseApp_map_{{event_details.id}}" rel="external", data-ajax="false">View event location</a></li>	
+</ul>
+
+</form>
+</div>
+
+
+</div>
+
+{% endblock %}
+
