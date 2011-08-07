@@ -4,12 +4,12 @@
 
 {% block content %}
 
-<div align="center" data-role="header" >Edit your suggestion</div>
+<div align="center" data-role="header" >Edit your comment</div>
 {% if logged_in and same %}
 {{ msg }}
 <form method='post' action="">
 {{ form }}
-<input type='submit' name='Submit'>
+<input type='submit' name='Submit' data-theme="b">
 </form>
 {% else %}
 {{ msg }}
