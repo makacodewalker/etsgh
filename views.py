@@ -74,7 +74,7 @@ def editSuggestion(request, id):
             return render_to_response('editsuggestion.html', {'msg':msg,'form':form.as_p(),'logged_in':request.user.is_authenticated(),'same':same })
     else:
         same = False
-        msg = 'You must log in to edit comments'
+        msg = 'To edit this comment, you must be logged in and be its original author.'
         form = SuggestionForm()
         return render_to_response('editsuggestion.html', {'msg':msg,'form':form.as_p(),'logged_in':request.user.is_authenticated(), 'same':same })
         
